@@ -7,9 +7,7 @@ import base64
 from openai import OpenAI
 from io import BytesIO
 from PIL import Image
-
-# Load environment variables from .env file
-load_dotenv()
+import toml
 
 # Function to load the recycling data
 def load_recycling_data():
@@ -26,16 +24,16 @@ def load_recycling_data():
 
 # Initialize Groq client
 def init_groq():
-    api_key = os.getenv('GROQ_API_KEY')
+    api_key = st.secrets['api_keys']['groq']
     if not api_key:
-        st.error("Please set your GROQ_API_KEY in the .env file")
+        st.error("Please set your Groq API key")
         return None
     return Groq(api_key=api_key)
 
 def init_openai():
-    api_key = os.getenv('OPENAI_API_KEY')
+    api_key = st.secrets['api_keys']['openai']
     if not api_key:
-        st.error("Please set your OPENAI_API_KEY in the .env file")
+        st.error("Please set your OpenAI API key")
         return None
     return OpenAI(api_key=api_key)
 
@@ -132,14 +130,15 @@ def main():
     st.title("🌍 Recycling Assistant")
     st.write("Ask questions about how to properly sort and recycle different items")
 
-    tab1, tab2 = st.tabs(["📸 Capture Image", "📝 Analysis Results"])
+    # tab1, tab2 = st.tabs(["📸 Capture Image", "📝 Analysis Results"])
     
-    # Load recycling data
+    # # Load recycling data
     recycling_data = load_recycling_data()
 
     if not recycling_data:
         st.stop()
 
+    
     # Initialize Groq
     groq_client = init_groq()
     openai_client = init_openai()

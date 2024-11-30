@@ -3,6 +3,5 @@ langgraph
 pydantic
 streamlit
 langchain-community
-pypdf
-faiss-cpu 
 langchain_openai
+toml
