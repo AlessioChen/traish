@@ -6,7 +6,7 @@ A smart web application that helps users properly sort and recycle items using c
 
 ## Demo
 
-https://traish.streamlit.app/
+https://alessiochen-traish-app-ilje0r.streamlit.app/
 
 ## Features
 
