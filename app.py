@@ -10,7 +10,6 @@ from PIL import Image
 import toml
 from toolhouse import Toolhouse
 
-
 # Function to load the recycling data
 def load_recycling_data():
     current_dir = os.getcwd()
@@ -26,7 +25,7 @@ def load_recycling_data():
 
 def init_tool_house():
     api_key = st.secrets['api_keys']['toolhouse']
-    return Toolhouse(access_token=api_key,
+    return Toolhouse(api_key=api_key,
 provider="openai")
 
 
@@ -99,8 +98,7 @@ def get_groq_response(client, content, prompt, th=None):
         return "Error: Groq client not initialized"
     
     try:
-        MODEL = "llama-3.1-70b-versatile"
-        
+        MODEL = "llama3-groq-70b-8192-tool-use-preview"
         messages = [
             {
                 "role": "system",
@@ -112,25 +110,57 @@ def get_groq_response(client, content, prompt, th=None):
             }
         ]
 
-        completion_params = {
-            "model": MODEL,
-            "messages": messages,
-            "temperature": 0.0,  # Lower temperature for more consistent responses
-            "max_tokens": 2000,
-        }
+        
+        if th is None: 
 
+            response = client.chat.completions.create(
+                model=MODEL,
+                messages=messages,
+                temperature=0.0,  # Lower temperature for more consistent responses
+                max_tokens=2000,
+
+            )
+        
+            return response.choices[0].message.content
+    
+    
+    
         # Add tools if th is provided
-        if th is not None:
-            completion_params["tools"] = th.get_tools()
+        messages = [{
+            "role": "user",
+            "content": "Search on web for recycling facilities near Bianrio F, Rome, Via Marsala, 29H, 00185 Roma RM and give me the results."
+        }]
 
-        # First API call
-        response = client.chat.completions.create(**completion_params)
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=messages,
+            # Passes Code Execution as a tool
+            tools=th.get_tools()
+        )
 
-        if th is not None:
-            messages += th.get_tools(response)
-            completion_params["messages"] = messages
-            response = client.chat.completions.create(**completion_params)
 
+
+        # Runs the Code Execution tool, gets the result, 
+        # and appends it to the context
+        th_response = th.run_tools(response)
+        messages += th_response
+        print("tool house")
+        print(th_response)
+        messages.append({
+            "role": "system", 
+            "content": "return the result to the user you must NEVER use thesearch tool again"
+        })
+
+        print('hello')
+        print(messages)
+
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=messages,
+        )
+                
+        print("response")
+        print(response.choices[0].message)
         return response.choices[0].message.content
     except Exception as e:
         return f"Error generating response: {str(e)}"
@@ -191,8 +221,7 @@ def main():
                 GROQ_CONTENT = """You are a specialized recycling assistant with deep knowledge of waste sorting.
                     Your goal is to provide accurate, practical advice that helps users correctly dispose of items.
                     Always prioritize environmental safety and proper waste separation."""
-                GROQ_PROMPT = f"""You are a recycling expert assistant. Using the provided recycling guidelines, analyze these items: {items}
-Context (recycling guidelines):
+                GROQ_PROMPT = f"""You are a recycling expert assistant. Using the provided recycling guidelines, analyze these items: {items} Context (recycling guidelines):
 {context}
 For each item, provide a structured analysis:
 1. Item Name:
@@ -239,5 +268,13 @@ Please format your response clearly and concisely for each item."""
                             elif "farmacy" in item.lower():
                                 st.image(get_bin_image("farmacie"), width=200)
 
+    # Add the new button and ecological sites finder
+    if st.button("🔍 Find Nearby Ecological Sites"):
+    
+        with st.spinner("Searching for ecological sites..."):
+            ecological_sites = get_groq_response(groq_client, '', '', th)
+            st.write("### 📍 Nearby Ecological Sites:")
+            st.write(ecological_sites)
+            
 if __name__ == "__main__":
     main()
