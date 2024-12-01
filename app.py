@@ -128,7 +128,7 @@ def get_groq_response(client, content, prompt, th=None):
         # Add tools if th is provided
         messages = [{
             "role": "user",
-            "content": "Search on web for recycling facilities near Bianrio F, Rome, Via Marsala, 29H, 00185 Roma RM and give me the results."
+            "content": "Search on web for recycling facilities near Binario F, Rome, Via Marsala, 29H, 00185 Roma RM and give me the results."
         }]
 
         response = client.chat.completions.create(
@@ -178,7 +178,6 @@ def get_bin_image(waste_type):
        "red": "images/red.png",
        "famacie": "images/farmacie.jpg",
        "yellow_street": "images/yellow_street.png",
-       "yellow": "images/yellow.png"
 
     }
     return bin_images.get(waste_type.lower(), None)
