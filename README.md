@@ -1,8 +1,8 @@
-# 🌍 Traish (Recycling Assistant)
 
-A smart web application that helps users properly sort and recycle items using computer vision and AI. The application provides detailed recycling instructions based on image analysis and local recycling guidelines.
 
-![Traish](./images/screenshot.png)
+#  🌍 Traish (Recycling Assistant)
+A smart web application that helps users properly sort and recycle items using computer vision and AI. The application provides detailed recycling instructions based on image analysis and local recycling guidelines, powered by **LLaMA**'s context-aware capabilities.
+    ![Traish](./images/screenshot.png)
 
 ## Demo
 
@@ -10,27 +10,36 @@ https://traish.streamlit.app/
 
 ## Features
 
-- 📸 Image-based item recognition
-- 🗑️ Detailed sorting instructions for each identified item
-- 🎯 Bin color coding system
-- 🔍 Nearby ecological sites finder
-- 🤖 AI-powered waste classification
-- 📋 Structured recycling guidelines
+📸 Image-based item recognition
+🗑️ Detailed sorting instructions for each identified item
+🎯 Bin color coding system
+🔍 Nearby ecological sites finder
+🤖 AI-powered waste classification
+📋 Structured recycling guidelines
+🧠 Context-aware recycling rules powered by LLaMA
 
+## How It Works
+The application leverages LLaMA's powerful context understanding to:
+
+- Process local recycling guidelines and regulations
+- Match identified items with the correct disposal methods
+- Provide accurate sorting instructions based on item characteristics
+- Explain the reasoning behind each recycling decision
+- Adapt recommendations to local waste management rules
 ## Technologies Used
 
 - **Frontend**: Streamlit
 - **AI Services**:
-  - Groq and llama for recycling instructions
-  - Toolhouse for location-based services
+- Groq and llama for recycling instructions
+- Toolhouse for location-based services
 
 ## Prerequisites
 
 - Python 3.8+
 - Required API keys:
-  - OpenAI API key
-  - Groq API key
-  - Toolhouse API key
+- OpenAI API key
+- Groq API key
+- Toolhouse API key
 
 ## Installation
 
