@@ -44,16 +44,30 @@ def analyze_image(client, image_data, recycling_data):
     try:
         # Encode image to base64
         base64_image = base64.b64encode(image_data.getvalue()).decode('utf-8')
+
+        prompt = """Analyze this image and identify items.
+Guidelines for identification:
+- List only physical objects you can clearly see
+- Use simple, generic terms
+- Specify quantities if multiple similar items exist
+- Ignore background elements or non-disposable items
+Format your response as a comma-separated list. Example:
+"glass wine bottle, plastic yogurt container, banana peel, cardboard box"
+"""
         
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {
+                    "role": "system",
+                    "content": "You are a waste sorting assistant that identifies items based on established recycling categories. Identify items precisely to help users determine the correct disposal method."
+                },
+                {
                     "role": "user",
                     "content": [
                         {
                             "type": "text",
-                            "text": "List the recyclable items you see in this image. Format your response as a comma-separated list of items."
+                            "text": prompt
                         },
                         {
                             "type": "image_url",
@@ -64,7 +78,7 @@ def analyze_image(client, image_data, recycling_data):
                     ]
                 }
             ],
-            max_tokens=300
+            max_tokens=500
         )
         
         return response.choices[0].message.content
@@ -76,22 +90,32 @@ def get_groq_response(client, items, context):
     if not client:
         return "Error: Groq client not initialized"
     
-    prompt = f"""You are a recycling assistant
-Using this recycling information:
+    prompt = f"""You are a recycling expert assistant. Using the provided recycling guidelines, analyze these items: {items}
+Context (recycling guidelines):
 {context}
-
-For each item listed: {items}, please tell me:
-1. Which waste type it is using the "name" property from the recycling data
-2. Any special preparation needed (if applicable)
-3. Why it goes in that bin or place 
-"""
+For each item, provide a structured analysis:
+1. Item Name:
+- Correct Bin: [Specify the exact bin color/type]
+- Preparation Required: [List any cleaning/preparation steps]
+- Reason: [Explain why this bin is correct]
+- Special Notes: [Any warnings, alternatives, or important details]
+Guidelines for your response:
+- Separate each item with a blank line
+- Be specific about bin colors and types
+- If an item isn't in the guidelines, recommend the safest disposal method
+- Mention if items need to be clean, disassembled, or specially prepared
+- Include any relevant warnings about contamination or hazardous materials
+- If an item has multiple components, explain how to separate them
+Please format your response clearly and concisely for each item."""
 
     try:
         chat_completion = client.chat.completions.create(
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful recycling assistant that provides accurate information based on the given context."
+                    "content": """You are a specialized recycling assistant with deep knowledge of waste sorting.
+                    Your goal is to provide accurate, practical advice that helps users correctly dispose of items.
+                    Always prioritize environmental safety and proper waste separation."""
                 },
                 {
                     "role": "user",
@@ -99,7 +123,7 @@ For each item listed: {items}, please tell me:
                 }
             ],
             model="llama-3.1-70b-versatile",
-            temperature=0.0,
+            temperature=0.0,  # Lower temperature for more consistent responses
             max_tokens=2000
         )
         return chat_completion.choices[0].message.content
