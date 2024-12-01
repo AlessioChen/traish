@@ -81,11 +81,10 @@ Using this recycling information:
 {context}
 
 For each item listed: {items}, please tell me:
-1. Which bin it should go in
+1. Which waste type it is using the "name" property from the recycling data
 2. Any special preparation needed (if applicable)
-3. Why it goes in that bin
-
-Format the response clearly for each item. If an item isn't found in the recycling information, please indicate that."""
+3. Why it goes in that bin or place 
+"""
 
     try:
         chat_completion = client.chat.completions.create(
@@ -100,7 +99,7 @@ Format the response clearly for each item. If an item isn't found in the recycli
                 }
             ],
             model="llama-3.1-70b-versatile",
-            temperature=0.1,
+            temperature=0.0,
             max_tokens=2000
         )
         return chat_completion.choices[0].message.content
@@ -111,7 +110,7 @@ def get_bin_image(waste_type):
     """Return the image path for a given waste type"""
     bin_images = {
        "battery_symbol": "images/battery_symbol.png",
-       "blue": "images/blue.png",
+       "blue": "images/blu.png",
        "brown": "images/brown.png",
        "green": "images/green.png",
        "yellow": "images/yellow.png",
@@ -146,7 +145,6 @@ def main():
         st.stop()
 
 
-
     img_file = st.camera_input("Take a picture of the item")
     if img_file is not None:
         with st.spinner("Analyzing image..."):
@@ -172,15 +170,15 @@ def main():
                             st.write(item)
                         with col2:
                             # Map waste types to their corresponding images
-                            if "brown" in item.lower():
+                            if "unsorted waste" in item.lower():
+                                st.image(get_bin_image("grey"), width=200)
+                            elif "organic" in item.lower() or "food waste" in item.lower():
                                 st.image(get_bin_image("brown"), width=200)
-                            elif "yellow" in item.lower():
+                            elif "plastic" in item.lower() or "metal" in item.lower():
                                 st.image(get_bin_image("yellow"), width=200)
-                            elif "gray" in item.lower():
-                                st.image(get_bin_image("gray"), width=200)
-                            elif "blue" in item.lower():
+                            elif "paper" in item.lower():
                                 st.image(get_bin_image("blue"), width=200)
-                            elif "red" in item.lower():
+                            elif "collection centers" in item.lower():
                                 st.image(get_bin_image("red"), width=200)
 
 
