@@ -144,23 +144,18 @@ def get_groq_response(client, content, prompt, th=None):
         # and appends it to the context
         th_response = th.run_tools(response)
         messages += th_response
-        print("tool house")
-        print(th_response)
+       
         messages.append({
             "role": "system", 
             "content": "return the result to the user you must NEVER use thesearch tool again"
         })
-
-        print('hello')
-        print(messages)
 
         response = client.chat.completions.create(
             model=MODEL,
             messages=messages,
         )
                 
-        print("response")
-        print(response.choices[0].message)
+
         return response.choices[0].message.content
     except Exception as e:
         return f"Error generating response: {str(e)}"
@@ -250,15 +245,15 @@ Please format your response clearly and concisely for each item."""
                             st.write(item)
                         with col2:
                             # Map waste types to their corresponding images
-                            if "unsorted waste" in item.lower():
+                            if "unsorted waste" in item.lower() or "grey" in item.lower():
                                 st.image(get_bin_image("grey"), width=200)
-                            elif "organic" in item.lower() or "food waste" in item.lower():
+                            elif "organic" in item.lower() or "food waste" in item.lower() or "brown" in item.lower():
                                 st.image(get_bin_image("brown"), width=200)
-                            elif "plastic" in item.lower() or "metal" in item.lower():
+                            elif "plastic" in item.lower() or "metal" in item.lower() or "yellow" in item.lower():
                                 st.image(get_bin_image("yellow"), width=200)
-                            elif "paper" in item.lower():
+                            elif "paper" in item.lower() or "blue" in item.lower():
                                 st.image(get_bin_image("blue"), width=200)
-                            elif "collection centers" in item.lower() or "electronic" in item.lower():
+                            elif "collection centers" in item.lower() or "electronic" in item.lower() or "red" in item.lower():
                                 st.image(get_bin_image("red"), width=200)
                             elif "oil" in item.lower():
                                 st.image(get_bin_image("oil_symbol"), width=200)
