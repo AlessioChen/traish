@@ -10,13 +10,13 @@ https://alessiochen-traish-app-ilje0r.streamlit.app/
 
 ## Features
 
-📸 Image-based item recognition
-🗑️ Detailed sorting instructions for each identified item
-🎯 Bin color coding system
-🔍 Nearby ecological sites finder
-🤖 AI-powered waste classification
-📋 Structured recycling guidelines
-🧠 Context-aware recycling rules powered by LLaMA
+- 📸 Image-based item recognition
+- 🗑️ Detailed sorting instructions for each identified item
+- 🎯 Bin color coding system
+- 🔍 Nearby ecological sites finder
+- 🤖 AI-powered waste classification
+- 📋 Structured recycling guidelines
+- 🧠 Context-aware recycling rules powered by LLaMA
 
 ## How It Works
 The application leverages LLaMA's powerful context understanding to:
