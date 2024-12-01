@@ -28,6 +28,10 @@ The application leverages LLaMA's powerful context understanding to:
 - Adapt recommendations to local waste management rules
 ## Technologies Used
 
+## Data Source
+The recycling guidelines and bin classification system are based on the official document from [Rome's municipality](https://www.comune.roma.it/web-resources/cms/documents/Istruzioni_Uso_famiglie_Nuovi_Colori_Cassonetti.pdf)
+
+
 - **Frontend**: Streamlit
 - **AI Services**:
 - Groq and llama for recycling instructions
