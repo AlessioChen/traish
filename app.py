@@ -263,12 +263,12 @@ Please format your response clearly and concisely for each item."""
                                 st.image(get_bin_image("farmacie"), width=200)
 
     # Add the new button and ecological sites finder
-    if st.button("🔍 Find Nearby Ecological Sites"):
+    # if st.button("🔍 Find Nearby Ecological Sites"):
     
-        with st.spinner("Searching for ecological sites..."):
-            ecological_sites = get_groq_response(groq_client, '', '', th)
-            st.write("### 📍 Nearby Ecological Sites:")
-            st.write(ecological_sites)
+    #     with st.spinner("Searching for ecological sites..."):
+    #         ecological_sites = get_groq_response(groq_client, '', '', th)
+    #         st.write("### 📍 Nearby Ecological Sites:")
+    #         st.write(ecological_sites)
             
 if __name__ == "__main__":
     main()
